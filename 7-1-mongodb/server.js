@@ -1,6 +1,6 @@
 /**
  * ================================================================================================================
-   Back-end Lab — MongoDB
+   Back-end Lab ??" MongoDB
  * ================================================================================================================
  *
  * ================================================================================================================
@@ -129,7 +129,7 @@
          { name: "Ali", age: 21, major: "CS" },
          { name: "Sara", age: 23, major: "SE" }
       ]);
-      console.log("✅ Inserted");
+      console.log("?o. Inserted");
       }
       createStudents();
    - Run server: node server.js and go to mongo cloud to see created document.
@@ -151,7 +151,7 @@
  *  
  *    async function updateStudent() {
          await Student.updateOne({ name: "Ali" }, { age: 22 });
-         console.log("✅ Updated Ali");
+         console.log("?o. Updated Ali");
       }
  * - Run server: node server.js and got to mongo cloud to see the updated document.
  * =====================================================
@@ -161,7 +161,7 @@
  *  
  *    async function deleteStudent() {
          await Student.deleteOne({ name: "Sara" });
-      console.log("✅ Deleted Sara");
+      console.log("?o. Deleted Sara");
       }
  * - Run server: node server.js and got to mongo cloud to verify, document is deleted.
  * 
@@ -170,22 +170,58 @@
 import mongoose from "mongoose";
 
 // establish connection
+const uri = "mongodb+srv://temsa7:8a88cBLVGoSLZaXj@cluster0.hxozhpu.mongodb.net/";
 
+async function main() {
+  try {
+    await mongoose.connect(uri, { dbName: "labDB" });
+    console.log("Connected to MongoDB via Mongoose");
 
-// define schema
+    // define schema
+    const studentSchema = new mongoose.Schema({
+      name: String,
+      age: Number,
+      major: String,
+    });
 
+    const Student = mongoose.model("Student", studentSchema);
 
-// create document
+    // create document
+    async function createStudents() {
+      await Student.insertMany([
+        { name: "Ali", age: 21, major: "CS" },
+        { name: "Abdul", age: 23, major: "ISE" },
+      ]);
+      console.log("Inserted Ali and Sara");
+    }
 
+    // read document
+    async function readStudents() {
+      const all = await Student.find();
+      console.log("All students:", all);
+    }
 
-// read document
+    // update document
+    async function updateStudent() {
+      await Student.updateOne({ name: "Ali" }, { $set: { age: 22 } });
+      console.log("Updated Ali to age 22");
+    }
 
+    // delete document
+    async function deleteStudent() {
+      await Student.deleteOne({ name: "Abdul" });
+      console.log("Deleted Abdul");
+    }
 
-// update document
+    // run the sequence
+    await createStudents();
+    await readStudents();
+    await updateStudent();
+    await deleteStudent();
+    await readStudents();
+  } catch (err) {
+    console.error("Mongo operation failed", err);
+  }
+}
 
-
-// delete document
-
-
-
-
+main();
